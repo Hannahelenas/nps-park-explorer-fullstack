@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700;900&family=Noto+Serif:wght@300;400;500;700;900&family=Noto+Serif+Display:wght@300;400;500;700;900&display=swap");
+@import "tailwindcss";
+
+/* Fonts and base variables */
+:root {
+  --font-noto-serif: "Noto Serif", serif;
+  --font-noto-sans: "Noto Sans", sans-serif;
+  --font-noto-display: "Noto Serif Display", serif;
+
+  /* Light mode colors */
+  --color-bg: #fafcf9;
+  --color-text: #313a44;
+  --color-button-primary: #083b35;
+  --color-primary: #083b35;
+  --color-secondary: #f0f7ea;
+  --color-teritary: #ddefd4;
+}
+
+.dark {
+  /* Dark mode colors */
+  --color-bg: #313a44;
+  --color-text: #f5f3ed;
+  --color-button-primary: #f5f3ed;
+  --color-primary: #313a44;
+}
+
+/* Base styling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-noto-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.font-serif {
+  font-family: var(--font-noto-serif);
+}
+
+.bg-color-button-primary {
+  background-color: var(--color-button-primary);
+}
+
+/* Leaflet map text styling */
+.leaflet-control-attribution a {
+  color: var(--color-text) !important;
+  text-decoration: underline;
+}
+.leaflet-control-container {
+  border: none !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+  border: var(--color-primary) !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  margin-bottom: 1px;
+}
+
+.leaflet-bar a,
+.leaflet-bar {
+  border: none !important;
+}

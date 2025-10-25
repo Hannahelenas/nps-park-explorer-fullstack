@@ -1,11 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
+import { links } from "../config/navLinks";
 
 const Footer = () => {
-  const links = [
-    { name: "Home", to: "/" },
-    { name: "Parks", to: "/parks" },
-  ];
-
   return (
     <footer className="relative text-center bg-[var(--color-primary)] pt-16">
       {/* Wave svg */}

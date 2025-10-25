@@ -3,11 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import "../animations.css";
 import FavouritesNavButton from "./common/FavouritesNavButton";
 import { IoCloseOutline, IoMenuOutline } from "react-icons/io5";
-
-const links = [
-  { name: "Home", to: "/" },
-  { name: "Parks", to: "/parks" },
-];
+import { links, mobileLinks } from "../config/navLinks";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -93,7 +89,7 @@ export default function Navbar() {
             className="flex flex-col gap-4 text-[var(--color-secondary)] 
           font-serif"
           >
-            {links.map((link) => (
+            {mobileLinks.map((link) => (
               <li key={link.to}>
                 <NavLink
                   to={link.to}

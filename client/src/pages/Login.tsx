@@ -8,6 +8,7 @@ import {
   type FormErrors,
 } from "../utils/formValidation";
 import LoginForm from "../components/common/LoginForm";
+import { useAuth } from "../context/auth/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ const Login = () => {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [generalMessage, setGeneralMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,43 +31,27 @@ const Login = () => {
       return;
     }
 
-    // TODO Replace mock response with real API call and proper error handling
-    /* try {
-      const response = { success: true };
-      if (!response.success) {
-        setGeneralMessage("Login failed. Please try again.");
-        return;
-      }
-
-      navigate("/user");
-      setEmail("");
-      setPassword("");
-      setFormErrors({});
-    } catch {
-      setGeneralMessage("Server error. Please try again later.");
-    } */
-
     try {
       const response = await fetch("http://localhost:3001/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // TODO implement token/session
+        login({ email: data.user.email });
         setEmail("");
         setPassword("");
         setFormErrors({});
         setGeneralMessage(null);
         navigate("/user");
         return;
-      } // Inloggning misslyckades
-      else
+      } else
         setGeneralMessage(
           data.error || "Login failed. Please check your credentials."
         );

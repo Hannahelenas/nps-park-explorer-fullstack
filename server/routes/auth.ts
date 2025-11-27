@@ -34,8 +34,8 @@ router.post("/login", async (req: Request, res: Response) => {
     // Sätt HttpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production", // === false i dev
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 1000 * 60 * 60, // 1 timme
     });
 

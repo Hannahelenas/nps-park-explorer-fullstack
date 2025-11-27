@@ -4,9 +4,12 @@ import "../animations.css";
 import FavouritesNavButton from "./common/FavouritesNavButton";
 import { IoCloseOutline, IoMenuOutline } from "react-icons/io5";
 import { links, mobileLinks } from "../config/navLinks";
+import { useAuth } from "../context/auth/useAuth";
+import { MdAccountCircle } from "react-icons/md";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <nav
@@ -51,17 +54,42 @@ export default function Navbar() {
           className="flex justify-end items-center gap-1 sm:gap-2 
         col-start-3 "
         >
-          <Link
-            to="/login"
-            aria-label="Go to login"
-            className="hidden lg:inline bg-[var(--color-bg)] border-2 
-            border-[var(--color-primary)] px-5 py-2 rounded-full transition-all 
-            duration-300 ease-in-out hover:bg-transparent 
-            hover:text-[var(--color-bg)] hover:border-[var(--color-bg)]
-             text-center"
-          >
-            Log in
-          </Link>
+          {/* Show Login /Log ut button depending on status */}
+          {isLoggedIn ? (
+            <button
+              onClick={logout}
+              className="hidden lg:inline bg-[var(--color-bg)] 
+              border-2 border-[var(--color-primary)] px-5 py-2 rounded-full 
+              transition-all duration-300 ease-in-out hover:bg-transparent 
+              hover:text-[var(--color-bg)] hover:border-[var(--color-bg)]"
+            >
+              Log ut
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="hidden lg:inline bg-[var(--color-bg)] 
+              border-2 border-[var(--color-primary)] px-5 py-2 
+              rounded-full transition-all duration-300 ease-in-out 
+              hover:bg-transparent hover:text-[var(--color-bg)] 
+              hover:border-[var(--color-bg)]"
+            >
+              Log in
+            </Link>
+          )}
+          {isLoggedIn && (
+            <Link
+              to="/user"
+              className="text-white"
+              aria-label="Go to user profile page"
+            >
+              <MdAccountCircle
+                className="text-[var(--color-bg)] text-3xl"
+                aria-hidden="true"
+                focusable="false"
+              />
+            </Link>
+          )}
           <FavouritesNavButton />
           {/* Mobile menu button */}
           <button

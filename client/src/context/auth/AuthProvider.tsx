@@ -8,39 +8,54 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const login = (userData: { email: string }) => {
     setIsLoggedIn(true);
     setUser(userData);
   };
 
-  const logout = () => {
+  const logout = async () => {
     setIsLoggedIn(false);
     setUser(null);
-    fetch("http://localhost:3001/api/logout", {
-      method: "POST",
-      credentials: "include",
-    });
+    try {
+      await fetch("/api/logout", { method: "POST", credentials: "include" });
+    } catch (err) {
+      console.warn("Logout failed:", err);
+    }
   };
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/me", {
-          credentials: "include",
-        });
-        if (res.ok) {
-          const data = await res.json();
+        const res = await fetch("/api/me", { credentials: "include" });
+
+        if (!res.ok) {
+          setLoading(false);
+          setIsLoggedIn(false);
+          setUser(null);
+          return;
+        }
+
+        const data = await res.json();
+        if (data?.email) {
           login({ email: data.email });
         }
       } catch (err) {
-        console.log("User not authenticated yet", err);
+        console.warn("Auth check failed:", err);
+      } finally {
+        setLoading(false);
       }
     };
+
     getUser();
   }, []);
 
   const contextValue: AuthContextType = { isLoggedIn, user, login, logout };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

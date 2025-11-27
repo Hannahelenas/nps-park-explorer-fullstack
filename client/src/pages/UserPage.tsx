@@ -9,9 +9,10 @@ const UserPage = () => {
     max-w-6xl mx-auto px-5 py-12 "
     >
       <PageHeading title="Profile" />
-      <p className="font-serif leading-relaxed text-lg mb-6 text-center py-10">
+      <p className="font-serif leading-relaxed text-lg mb-6 text-center py-12">
         Welcome user! Welcome {user?.email}
       </p>
+      <button onClick={() => {}}>Update profile</button>
     </section>
   );
 };

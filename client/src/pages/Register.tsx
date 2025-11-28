@@ -39,7 +39,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch(`${backendUrl}api/users`, {
+      const response = await fetch(`${backendUrl}/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -16,6 +16,10 @@ const Register = () => {
   const [generalMessage, setGeneralMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const backendUrl = import.meta.env.PROD
+    ? import.meta.env.VITE_BACKEND_URL
+    : "";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -35,7 +39,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch("/api/users", {
+      const response = await fetch(`${backendUrl}api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

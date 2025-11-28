@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(userData);
   };
 
-  const logout = async () => {
+  /* const logout = async () => {
     setIsLoggedIn(false);
     setUser(null);
     try {
@@ -30,6 +30,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch (err) {
       console.warn("Logout failed:", err);
     }
+  }; */
+
+  const logout = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/api/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        setIsLoggedIn(false);
+        setUser(null);
+      } else {
+        console.warn("Logout failed on server");
+      }
+    } catch (err) {
+      console.warn("Logout failed:", err);
+    }
   };
 
   useEffect(() => {
@@ -37,6 +55,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         const res = await fetch(`${backendUrl}/api/me`, {
           credentials: "include",
+          cache: "no-store",
         });
 
         if (!res.ok) {

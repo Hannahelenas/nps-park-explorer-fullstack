@@ -48,7 +48,11 @@ router.post("/login", async (req: Request, res: Response) => {
 
 // LOGOUT
 router.post("/logout", (_req, res) => {
-  res.clearCookie("token", { httpOnly: true, sameSite: "lax" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
   res.json({ message: "Logged out" });
 });
 

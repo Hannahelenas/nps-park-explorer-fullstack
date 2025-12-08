@@ -8,7 +8,6 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const backendUrl = import.meta.env.PROD
     ? import.meta.env.VITE_BACKEND_URL
@@ -18,19 +17,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsLoggedIn(true);
     setUser(userData);
   };
-
-  /* const logout = async () => {
-    setIsLoggedIn(false);
-    setUser(null);
-    try {
-      await fetch(`${backendUrl}/api/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-    } catch (err) {
-      console.warn("Logout failed:", err);
-    }
-  }; */
 
   const logout = async () => {
     try {
@@ -59,7 +45,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         });
 
         if (!res.ok) {
-          setLoading(false);
           setIsLoggedIn(false);
           setUser(null);
           return;
@@ -71,8 +56,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       } catch (err) {
         console.warn("Auth check failed:", err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -80,10 +63,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [backendUrl]);
 
   const contextValue: AuthContextType = { isLoggedIn, user, login, logout };
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

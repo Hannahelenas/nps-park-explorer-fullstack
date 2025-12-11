@@ -6,10 +6,11 @@ import { IoCloseOutline, IoMenuOutline } from "react-icons/io5";
 import { links, mobileLinks } from "../config/navLinks";
 import { useAuth } from "../context/auth/useAuth";
 import { MdAccountCircle } from "react-icons/md";
+import AuthButton from "./common/buttons/AuthButton";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   return (
     <nav
@@ -54,29 +55,7 @@ export default function Navbar() {
           className="flex justify-end items-center gap-1 sm:gap-2 
         col-start-3 "
         >
-          {/* Show Login /Log ut button depending on status */}
-          {isLoggedIn ? (
-            <button
-              onClick={logout}
-              className="hidden lg:inline bg-[var(--color-bg)] 
-              border-2 border-[var(--color-primary)] px-5 py-2 rounded-full 
-              transition-all duration-300 ease-in-out hover:bg-transparent 
-              hover:text-[var(--color-bg)] hover:border-[var(--color-bg)]"
-            >
-              Log ut
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              className="hidden lg:inline bg-[var(--color-bg)] 
-              border-2 border-[var(--color-primary)] px-5 py-2 
-              rounded-full transition-all duration-300 ease-in-out 
-              hover:bg-transparent hover:text-[var(--color-bg)] 
-              hover:border-[var(--color-bg)]"
-            >
-              Log in
-            </Link>
-          )}
+          {/* Show profile link and auth button depending on state */}
           {isLoggedIn && (
             <Link
               to="/user"
@@ -90,6 +69,7 @@ export default function Navbar() {
               />
             </Link>
           )}
+          <AuthButton className="hidden lg:inline" />
           <FavouritesNavButton />
           {/* Mobile menu button */}
           <button
@@ -131,6 +111,21 @@ export default function Navbar() {
                 </NavLink>
               </li>
             ))}
+            {isLoggedIn && (
+              <NavLink
+                to="/user"
+                aria-label="Go to user profile page"
+                onClick={() => setMenuOpen(false)}
+                className={({ isActive }) =>
+                  `block  ${isActive ? "underline underline-offset-2" : ""}`
+                }
+              >
+                Profile
+              </NavLink>
+            )}
+            <li>
+              <AuthButton setMenuOpen={setMenuOpen} />
+            </li>
           </ul>
         </div>
       )}

@@ -1,15 +1,11 @@
-export interface NavLink {
+export interface LinkItem {
   name: string;
   to: string;
 }
 
-export const links: NavLink[] = [
+export const links: LinkItem[] = [
   { name: "Home", to: "/" },
   { name: "Parks", to: "/parks" },
 ];
 
-export const mobileLinks: NavLink[] = [
-  { name: "Home", to: "/" },
-  { name: "Parks", to: "/parks" },
-  { name: "Log in", to: "/login" },
-];
+export const mobileLinks: LinkItem[] = [...links];

@@ -1,4 +1,5 @@
 import PageHeading from "../components/common/PageHeading";
+import DeleteAccountForm from "../components/DeleteAccountForm";
 import { useAuth } from "../context/auth/useAuth";
 
 const UserPage = () => {
@@ -12,7 +13,8 @@ const UserPage = () => {
       <p className="font-serif leading-relaxed text-lg mb-6 text-center py-12">
         Welcome user! Welcome {user?.email}
       </p>
-      <button onClick={() => {}}>Update profile</button>
+      <button onClick={() => {}}>Change Profile</button>
+      <DeleteAccountForm />
     </section>
   );
 };

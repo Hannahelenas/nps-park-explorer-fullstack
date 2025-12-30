@@ -20,8 +20,8 @@ if (!connectionString) throw new Error("Database URL not set");
   `Using ${
     process.env.NODE_ENV === "production" ? "PRODUCTION" : "DEVELOPMENT"
   } database:`
-); */
-
+);
+*/
 export const pool = new Pool({
   connectionString,
   ssl: {

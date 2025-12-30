@@ -18,6 +18,10 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const backendUrl = import.meta.env.PROD
+    ? import.meta.env.VITE_BACKEND_URL
+    : "";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -32,7 +36,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/api/login", {
+      const response = await fetch(`${backendUrl}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

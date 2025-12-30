@@ -8,7 +8,10 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
-  const [loading, setLoading] = useState(true);
+
+  const backendUrl = import.meta.env.PROD
+    ? import.meta.env.VITE_BACKEND_URL
+    : "";
 
   const login = (userData: { email: string }) => {
     setIsLoggedIn(true);
@@ -16,10 +19,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = async () => {
-    setIsLoggedIn(false);
-    setUser(null);
     try {
-      await fetch("/api/logout", { method: "POST", credentials: "include" });
+      const res = await fetch(`${backendUrl}/api/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        setIsLoggedIn(false);
+        setUser(null);
+      } else {
+        console.warn("Logout failed on server");
+      }
     } catch (err) {
       console.warn("Logout failed:", err);
     }
@@ -28,10 +39,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch("/api/me", { credentials: "include" });
+        const res = await fetch(`${backendUrl}/api/me`, {
+          credentials: "include",
+          cache: "no-store",
+        });
 
         if (!res.ok) {
-          setLoading(false);
           setIsLoggedIn(false);
           setUser(null);
           return;
@@ -43,19 +56,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       } catch (err) {
         console.warn("Auth check failed:", err);
-      } finally {
-        setLoading(false);
       }
     };
 
     getUser();
-  }, []);
+  }, [backendUrl]);
 
   const contextValue: AuthContextType = { isLoggedIn, user, login, logout };
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { pool } from "../db";
 import bcrypt from "bcrypt";
+import { authMiddleware } from "../middleware/auth";
 
 const router = Router();
 
@@ -33,6 +34,47 @@ router.post("/", async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: "Internal server error during registration." });
+  }
+});
+
+// DELETE current user (with password confirmation)
+router.delete("/me", authMiddleware, async (req: any, res: Response) => {
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ error: "Password is required" });
+  }
+
+  try {
+    const userId = req.user.id;
+
+    const result = await pool.query(
+      "SELECT password_hash FROM users WHERE id = $1",
+      [userId]
+    );
+
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) {
+      return res.status(401).json({ error: "Incorrect password" });
+    }
+
+    await pool.query("DELETE FROM users WHERE id = $1", [userId]);
+
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (err) {
+    console.error("Delete account error:", err);
+    res.status(500).json({ error: "Failed to delete account" });
   }
 });
 

@@ -9,23 +9,19 @@ dotenv.config({
   path: path.resolve(process.cwd(), envFile),
 });
 
-const connectionString = process.env.DEVELOP_DATABASE_URL;
-if (!connectionString) throw new Error("DATABASE URL not set");
-
-console.log(
-  `Using ${
-    process.env.NODE_ENV === "production" ? "PRODUCTION" : "DEVELOPMENT"
-  } database:`
-);
-
-/*
 const connectionString =
   process.env.NODE_ENV === "production"
     ? process.env.PROD_DATABASE_URL
     : process.env.DEVELOP_DATABASE_URL;
 
-if (!connectionString) throw new Error("Database URL not set");  */
+if (!connectionString) throw new Error("Database URL not set");
 
+/* console.log(
+  `Using ${
+    process.env.NODE_ENV === "production" ? "PRODUCTION" : "DEVELOPMENT"
+  } database:`
+);
+*/
 export const pool = new Pool({
   connectionString,
   ssl: {

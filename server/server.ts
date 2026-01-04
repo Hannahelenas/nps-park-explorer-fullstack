@@ -26,10 +26,10 @@ app.use(
 );
 
 // Debug-middleware for req body test
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.url} - Body:`, req.body);
   next();
-});
+}); */
 
 // Routes
 app.use("/api", authRoutes);

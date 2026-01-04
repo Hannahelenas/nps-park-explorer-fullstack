@@ -3,14 +3,14 @@ import { Link, NavLink } from "react-router-dom";
 import "../animations.css";
 import FavouritesNavButton from "./common/FavouritesNavButton";
 import { IoCloseOutline, IoMenuOutline } from "react-icons/io5";
-
-const links = [
-  { name: "Home", to: "/" },
-  { name: "Parks", to: "/parks" },
-];
+import { links, mobileLinks } from "../config/navLinks";
+import { useAuth } from "../context/auth/useAuth";
+import { MdAccountCircle } from "react-icons/md";
+import AuthButton from "./common/buttons/AuthButton";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   return (
     <nav
@@ -55,17 +55,21 @@ export default function Navbar() {
           className="flex justify-end items-center gap-1 sm:gap-2 
         col-start-3 "
         >
-          <Link
-            to="/login"
-            aria-label="Go to login"
-            className="hidden lg:inline bg-[var(--color-bg)] border-2 
-            border-[var(--color-primary)] px-5 py-2 rounded-full transition-all 
-            duration-300 ease-in-out hover:bg-transparent 
-            hover:text-[var(--color-bg)] hover:border-[var(--color-bg)]
-             text-center"
-          >
-            Log in
-          </Link>
+          {/* Show profile link and auth button depending on state */}
+          {isLoggedIn && (
+            <Link
+              to="/user"
+              className="text-white"
+              aria-label="Go to user profile page"
+            >
+              <MdAccountCircle
+                className="text-[var(--color-bg)] text-3xl"
+                aria-hidden="true"
+                focusable="false"
+              />
+            </Link>
+          )}
+          <AuthButton className="hidden lg:inline" />
           <FavouritesNavButton />
           {/* Mobile menu button */}
           <button
@@ -93,7 +97,7 @@ export default function Navbar() {
             className="flex flex-col gap-4 text-[var(--color-secondary)] 
           font-serif"
           >
-            {links.map((link) => (
+            {mobileLinks.map((link) => (
               <li key={link.to}>
                 <NavLink
                   to={link.to}
@@ -107,6 +111,21 @@ export default function Navbar() {
                 </NavLink>
               </li>
             ))}
+            {isLoggedIn && (
+              <NavLink
+                to="/user"
+                aria-label="Go to user profile page"
+                onClick={() => setMenuOpen(false)}
+                className={({ isActive }) =>
+                  `block  ${isActive ? "underline underline-offset-2" : ""}`
+                }
+              >
+                Profile
+              </NavLink>
+            )}
+            <li>
+              <AuthButton setMenuOpen={setMenuOpen} />
+            </li>
           </ul>
         </div>
       )}

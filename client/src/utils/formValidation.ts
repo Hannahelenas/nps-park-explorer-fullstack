@@ -68,3 +68,32 @@ export const loginSchema: ValidationSchema = {
   ],
   password: [(value) => (!value ? "Password is required" : null)],
 };
+
+// Update password schema
+export const updatePasswordSchema: ValidationSchema = {
+  currentPassword: [
+    (value) => (!value ? "Current password is required" : null),
+  ],
+
+  newPassword: [
+    (value) => (!value ? "New password is required" : null),
+
+    (value, allValues) =>
+      value === allValues?.currentPassword
+        ? "New password must be different from current password"
+        : null,
+
+    (value) =>
+      value.length < 8 ? "Password must be at least 8 characters" : null,
+
+    (value) =>
+      !/[A-Z]/.test(value) || !/[0-9]/.test(value)
+        ? "Password must include at least one uppercase letter and one number"
+        : null,
+  ],
+
+  confirmPassword: [
+    (value, allValues) =>
+      value !== allValues?.newPassword ? "Passwords do not match" : null,
+  ],
+};

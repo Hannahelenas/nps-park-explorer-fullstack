@@ -12,6 +12,8 @@ import { ParkingLotProvider } from "./context/parkingLots/ParkingLotProvider";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserPage from "./pages/UserPage";
+import { AuthProvider } from "./context/auth/AuthProvider";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +26,14 @@ const router = createBrowserRouter([
       { path: "favourites", element: <Favourites /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      { path: "user", element: <UserPage /> },
+      {
+        path: "user",
+        element: (
+          <ProtectedRoute>
+            <UserPage />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);
@@ -32,15 +41,17 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <FavouritesProvider>
-        <ParkProvider>
-          <ParkingLotProvider>
-            <VisitorCenterProvider>
-              <RouterProvider router={router} />
-            </VisitorCenterProvider>
-          </ParkingLotProvider>
-        </ParkProvider>
-      </FavouritesProvider>
+      <AuthProvider>
+        <FavouritesProvider>
+          <ParkProvider>
+            <ParkingLotProvider>
+              <VisitorCenterProvider>
+                <RouterProvider router={router} />
+              </VisitorCenterProvider>
+            </ParkingLotProvider>
+          </ParkProvider>
+        </FavouritesProvider>
+      </AuthProvider>
     </>
   );
 }
